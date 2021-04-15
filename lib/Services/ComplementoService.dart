@@ -1,0 +1,18 @@
+import 'package:app_lanchonete/Controller/Config.Controller.dart';
+import 'package:app_lanchonete/Models/complementos_model.dart';
+import 'package:dio/dio.dart';
+
+Future<List<Complementos>> fetchComplementos(int grupo) async {
+  final url = await ConfigController.instance.getUrlBase();
+  BaseOptions options = new BaseOptions(
+    baseUrl: url,
+    connectTimeout: 50000,
+    receiveTimeout: 50000,
+  );
+
+  Dio dio = new Dio(options);
+  final response = await dio.get<List>('/Complementos/$grupo');
+  final resultado =
+      response.data.map((json) => Complementos.fromJson(json)).toList();
+  return resultado;
+}
