@@ -1,5 +1,5 @@
-import 'package:app_lanchonete/Interfaces/Local_Storage.Interface.dart';
-import 'package:app_lanchonete/Services/Local_storage.Service.dart';
+import 'package:lanchonete/Interfaces/Local_Storage.Interface.dart';
+import 'package:lanchonete/Services/Local_storage.Service.dart';
 import 'package:flutter/material.dart';
 
 class ConfigController {
@@ -13,7 +13,7 @@ class ConfigController {
     }
     await getConfig();
     return 'http://${baseURL.value}:9000';
-  }  
+  }
 
   ConfigController._() {
     getConfig();

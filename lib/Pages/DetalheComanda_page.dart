@@ -1,12 +1,12 @@
 import 'dart:ui';
 
-import 'package:app_lanchonete/Constants.dart';
-import 'package:app_lanchonete/Controller/Mesas.Controller.dart';
-import 'package:app_lanchonete/Models/comanda_model.dart';
-import 'package:app_lanchonete/Models/itens_model.dart';
-import 'package:app_lanchonete/Pages/Categoria_page.dart';
-import 'package:app_lanchonete/Pages/EncerramentoComanda_page.dart';
-import 'package:app_lanchonete/Services/ComandaService.dart';
+import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Controller/Mesas.Controller.dart';
+import 'package:lanchonete/Models/comanda_model.dart';
+import 'package:lanchonete/Models/itens_model.dart';
+import 'package:lanchonete/Pages/Categoria_page.dart';
+import 'package:lanchonete/Pages/EncerramentoComanda_page.dart';
+import 'package:lanchonete/Services/ComandaService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -73,6 +73,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
             onPressed: () {
               comandaService.deletarItemComanda(item.codigo).then((value) {
                 if (value) {
+                  comandaService.notificarOperacional();
                   final snackBar = SnackBar(
                     content: Text('Item deletado com sucesso!'),
                   );

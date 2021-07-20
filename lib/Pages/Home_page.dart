@@ -1,7 +1,7 @@
-import 'package:app_lanchonete/Components/CustomSwitch.dart';
-import 'package:app_lanchonete/Constants.dart';
-import 'package:app_lanchonete/Pages/Categoria_page.dart';
-import 'package:app_lanchonete/Pages/DetalheComanda_page.dart';
+import 'package:lanchonete/Components/CustomSwitch.dart';
+import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Pages/Categoria_page.dart';
+import 'package:lanchonete/Pages/DetalheComanda_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

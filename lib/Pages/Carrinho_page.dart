@@ -1,9 +1,9 @@
-import 'package:app_lanchonete/Models/itens_model.dart';
+import 'package:lanchonete/Models/itens_model.dart';
+import 'package:lanchonete/Pages/Principal_page.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app_lanchonete/Controller/Comanda.Controller.dart';
-import 'package:app_lanchonete/Controller/Mesas.Controller.dart';
-import 'package:app_lanchonete/Pages/DetalheComanda_page.dart';
+import 'package:lanchonete/Controller/Comanda.Controller.dart';
+import 'package:lanchonete/Controller/Mesas.Controller.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -53,18 +53,12 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     comandaController.insereComanda(widget.mesa).then((value) {
                       if (value) {
                         MesaController.instance.atualizar.value = true;
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) {
-                              return DetalheComandaPage(
-                                numeroMesa: widget.mesa,
-                              );
-                            },
-                          ),
-                        );
-                      } else {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                          builder: (_) {
+                            return PrincipalPage(paginas: Paginas.mesas);
+                          },
+                        ), (route) => false);
                         final snackbar = const SnackBar(
                             content: Text('Falha ao inserir comanda!'));
                         ScaffoldMessenger.of(context).showSnackBar(snackbar);

@@ -1,4 +1,4 @@
-import 'package:app_lanchonete/Models/complementos_model.dart';
+import 'package:lanchonete/Models/complementos_model.dart';
 
 class Itens {
   int codigo;

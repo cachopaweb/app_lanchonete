@@ -1,6 +1,6 @@
-import 'package:app_lanchonete/Constants.dart';
-import 'package:app_lanchonete/Models/produtos_model.dart';
-import 'package:app_lanchonete/Services/ProdutosService.dart';
+import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Models/produtos_model.dart';
+import 'package:lanchonete/Services/ProdutosService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

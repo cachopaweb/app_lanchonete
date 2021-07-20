@@ -1,4 +1,4 @@
-import 'package:app_lanchonete/Controller/Theme.Controller.dart';
+import 'package:lanchonete/Controller/Theme.Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

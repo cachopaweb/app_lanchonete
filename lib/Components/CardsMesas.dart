@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:app_lanchonete/Constants.dart';
-import 'package:app_lanchonete/Pages/Categoria_page.dart';
-import 'package:app_lanchonete/Pages/DetalheComanda_page.dart';
+import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Pages/Categoria_page.dart';
+import 'package:lanchonete/Pages/DetalheComanda_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

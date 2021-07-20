@@ -1,4 +1,4 @@
-# app_lanchonete
+# lanchonete
 
 A new Flutter project.
 

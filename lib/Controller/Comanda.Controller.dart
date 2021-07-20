@@ -1,8 +1,8 @@
-import 'package:app_lanchonete/Models/comanda_model.dart';
-import 'package:app_lanchonete/Models/complementos_model.dart';
-import 'package:app_lanchonete/Models/itens_model.dart';
-import 'package:app_lanchonete/Models/produtos_model.dart';
-import 'package:app_lanchonete/Services/ComandaService.dart';
+import 'package:lanchonete/Models/comanda_model.dart';
+import 'package:lanchonete/Models/complementos_model.dart';
+import 'package:lanchonete/Models/itens_model.dart';
+import 'package:lanchonete/Models/produtos_model.dart';
+import 'package:lanchonete/Services/ComandaService.dart';
 import 'package:flutter/cupertino.dart';
 
 class ComandaController extends ChangeNotifier {
@@ -56,6 +56,7 @@ class ComandaController extends ChangeNotifier {
         resultado = await comandaService.atualizarComanda(comanda);
       }
       if (resultado) {
+        comandaService.notificarOperacional();
         //limpa os itens
         clear();
       }

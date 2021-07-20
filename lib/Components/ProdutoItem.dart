@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:app_lanchonete/Constants.dart';
-import 'package:app_lanchonete/Controller/Comanda.Controller.dart';
-import 'package:app_lanchonete/Controller/Theme.Controller.dart';
-import 'package:app_lanchonete/Models/complementos_model.dart';
-import 'package:app_lanchonete/Models/produtos_model.dart';
-import 'package:app_lanchonete/Services/ComplementoService.dart';
-import 'package:app_lanchonete/Services/ProdutosService.dart';
+import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Controller/Comanda.Controller.dart';
+import 'package:lanchonete/Controller/Theme.Controller.dart';
+import 'package:lanchonete/Models/complementos_model.dart';
+import 'package:lanchonete/Models/produtos_model.dart';
+import 'package:lanchonete/Services/ComplementoService.dart';
+import 'package:lanchonete/Services/ProdutosService.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class _ProdutoItemState extends State<ProdutoItem> {
   final produtosService = ProdutosService();
   String _observacao = '';
   final complementos = ValueNotifier<List<Complementos>>([]);
-  final contador = ValueNotifier<int>(0);
+  int contador = 0;
   var f = new NumberFormat("##0.00", "pt_BR");
 
   @override
@@ -138,8 +138,9 @@ class _ProdutoItemState extends State<ProdutoItem> {
           MaterialButton(
             height: 20,
             onPressed: () {
-              contador.value++;
+              contador++;
               comandaController.adicionaItem(widget.produto);
+              setState(() {});
             },
             color: Colors.green,
             child: Icon(
@@ -150,22 +151,21 @@ class _ProdutoItemState extends State<ProdutoItem> {
             padding: EdgeInsets.all(5),
             shape: CircleBorder(),
           ),
-          ValueListenableBuilder(
-            valueListenable: contador,
-            builder: (context, value, child) => Text(
-              value.toString(),
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.black),
+          Text(
+            contador.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.black,
             ),
           ),
           MaterialButton(
             height: 20,
             onPressed: () {
-              contador.value--;
+              contador--;
               comandaController.removeItem(widget.produto.codigo);
-              if (contador.value < 0) contador.value = 0;
+              if (contador < 0) contador = 0;
+              setState(() {});
             },
             color: Colors.red,
             child: Icon(
@@ -178,39 +178,33 @@ class _ProdutoItemState extends State<ProdutoItem> {
           ),
         ]),
         Column(mainAxisSize: MainAxisSize.min, children: [
-          ValueListenableBuilder<int>(
-            valueListenable: contador,
-            builder: (context, value, child) => IconButton(
-              onPressed: value > 0
-                  ? () {
-                      _telaObservacao();
-                    }
-                  : null,
-              color: Colors.green,
-              icon: Icon(
-                Icons.edit,
-                size: 24,
-                color: value > 0 ? Colors.black : Colors.grey,
-              ),
+          IconButton(
+            onPressed: contador > 0
+                ? () {
+                    _telaObservacao();
+                  }
+                : null,
+            color: Colors.green,
+            icon: Icon(
+              Icons.edit,
+              size: 24,
+              color: contador > 0 ? Colors.black : Colors.grey,
             ),
           ),
           SizedBox(
             height: 20,
           ),
-          ValueListenableBuilder<int>(
-            valueListenable: contador,
-            builder: (context, value, child) => IconButton(
-              onPressed: value > 0
-                  ? () {
-                      _adicionais();
-                    }
-                  : null,
-              color: Colors.red,
-              icon: Icon(
-                Icons.add_circle,
-                size: 24,
-                color: value > 0 ? Colors.black : Colors.grey,
-              ),
+          IconButton(
+            onPressed: contador > 0
+                ? () {
+                    _adicionais();
+                  }
+                : null,
+            color: Colors.red,
+            icon: Icon(
+              Icons.add_circle,
+              size: 24,
+              color: contador > 0 ? Colors.black : Colors.grey,
             ),
           ),
         ]),

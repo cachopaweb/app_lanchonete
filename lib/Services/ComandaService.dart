@@ -1,6 +1,8 @@
-import 'package:app_lanchonete/Controller/Config.Controller.dart';
-import 'package:app_lanchonete/Models/comanda_model.dart';
-import 'package:app_lanchonete/Models/itemComPro_model.dart';
+import 'dart:async';
+
+import 'package:lanchonete/Controller/Config.Controller.dart';
+import 'package:lanchonete/Models/comanda_model.dart';
+import 'package:lanchonete/Models/itemComPro_model.dart';
 import 'package:dio/dio.dart';
 
 class ComandaService {
@@ -30,6 +32,7 @@ class ComandaService {
 
     dio = new Dio(options);
     final response = await dio.post('/Comandas', data: comanda.toJson());
+    await notificarOperacional();
     return response.statusCode == 201;
   }
 
@@ -111,29 +114,20 @@ class ComandaService {
     return response.statusCode == 200;
   }
 
-  // Future<bool> notificarNovaComanda(int codigo) async {
-  //   final url = await ConfigController.instance.getUrlBase();
-  //   BaseOptions options = new BaseOptions(
-  //       baseUrl: url,
-  //       connectTimeout: 50000,
-  //       receiveTimeout: 50000,
-  //       headers: {'socket_client': 'LANCHONETE'});
+  FutureOr<bool> notificarOperacional() async {
+    try {
+      final url = await ConfigController.instance.getUrlBase();
+      BaseOptions options = new BaseOptions(
+          baseUrl: url,
+          connectTimeout: 50000,
+          receiveTimeout: 50000,
+          headers: {'socket_client': 'LANCHONETE'});
 
-  //   dio = new Dio(options);
-  //   final response = await dio.get('/socket/notificar');
-  //   return response.statusCode == 200;
-  // }
-
-  // Future<bool> notificarNovoFechamento(int codigo) async {
-  //   final url = await ConfigController.instance.getUrlBase();
-  //   BaseOptions options = new BaseOptions(
-  //       baseUrl: url,
-  //       connectTimeout: 50000,
-  //       receiveTimeout: 50000,
-  //       headers: {'socket_client': 'LANCHONETE'});
-
-  //   dio = new Dio(options);
-  //   final response = await dio.get('/socket/fechamento');
-  //   return response.statusCode == 200;
-  // }
+      dio = new Dio(options);
+      final response = await dio.get('/socket/notificar');
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e.message);
+    }
+  }
 }

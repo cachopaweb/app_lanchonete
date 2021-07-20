@@ -1,5 +1,5 @@
-import 'package:app_lanchonete/Controller/Mesas.Controller.dart';
-import 'package:app_lanchonete/Services/ComandaService.dart';
+import 'package:lanchonete/Controller/Mesas.Controller.dart';
+import 'package:lanchonete/Services/ComandaService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -72,11 +72,12 @@ class _EncerramentoComandaState extends State<EncerramentoComanda> {
   void initState() {
     super.initState();
     isLoading = true;
-    comandaService.encerrarComanda(widget.comanda).then((value) {      
+    comandaService.encerrarComanda(widget.comanda).then((value) {
       setState(() {
         isLoading = false;
         isSuccess = value;
       });
+      comandaService.notificarOperacional();
     });
   }
 

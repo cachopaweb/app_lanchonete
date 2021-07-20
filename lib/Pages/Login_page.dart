@@ -1,4 +1,4 @@
-import 'package:app_lanchonete/Pages/Principal_page.dart';
+import 'package:lanchonete/Pages/Principal_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,15 +20,6 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(
                 height: 50,
-              ),
-              Text(
-                'Usuário',
-                style: TextStyle(color: Colors.white),
-              ),
-              TextFormField(
-                autofocus: true,
-                keyboardType: TextInputType.text,
-                style: TextStyle(color: Colors.white),
               ),
               SizedBox(
                 height: 20,
@@ -61,7 +52,7 @@ class LoginPage extends StatelessWidget {
                       Navigator.pushReplacement(context,
                           CupertinoPageRoute(builder: (_) {
                         return PrincipalPage(
-                          paginas: Paginas.home,
+                          paginas: Paginas.mesas,
                         );
                       }));
                     },

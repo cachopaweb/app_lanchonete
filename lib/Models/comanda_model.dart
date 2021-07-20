@@ -1,4 +1,4 @@
-import 'package:app_lanchonete/Models/itens_model.dart';
+import 'package:lanchonete/Models/itens_model.dart';
 
 class Comanda {
   int codigo;

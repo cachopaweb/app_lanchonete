@@ -1,7 +1,7 @@
-import 'package:app_lanchonete/Constants.dart';
-import 'package:app_lanchonete/Controller/Comanda.Controller.dart';
-import 'package:app_lanchonete/Controller/Theme.Controller.dart';
-import 'package:app_lanchonete/Pages/Login_page.dart';
+import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Controller/Comanda.Controller.dart';
+import 'package:lanchonete/Controller/Theme.Controller.dart';
+import 'package:lanchonete/Pages/Login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,4 +1,4 @@
-import 'package:app_lanchonete/Interfaces/Local_Storage.Interface.dart';
+import 'package:lanchonete/Interfaces/Local_Storage.Interface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService implements ILocalStorage {

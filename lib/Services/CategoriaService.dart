@@ -1,5 +1,5 @@
-import 'package:app_lanchonete/Controller/Config.Controller.dart';
-import 'package:app_lanchonete/Models/categoria_model.dart';
+import 'package:lanchonete/Controller/Config.Controller.dart';
+import 'package:lanchonete/Models/categoria_model.dart';
 import 'package:dio/dio.dart';
 
 Future<List<Categoria>> fetchCategorias() async {

@@ -1,4 +1,4 @@
-package com.example.app_lanchonete
+package com.example.lanchonete
 
 import io.flutter.embedding.android.FlutterActivity
 

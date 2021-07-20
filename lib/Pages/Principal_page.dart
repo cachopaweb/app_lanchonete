@@ -1,7 +1,7 @@
-import 'package:app_lanchonete/Pages/Config_page.dart';
-import 'package:app_lanchonete/Pages/Consulta_Produtos_page.dart';
-import 'package:app_lanchonete/Pages/Home_page.dart';
-import 'package:app_lanchonete/Pages/Mesas_page.dart';
+import 'package:lanchonete/Pages/Config_page.dart';
+import 'package:lanchonete/Pages/Consulta_Produtos_page.dart';
+import 'package:lanchonete/Pages/Home_page.dart';
+import 'package:lanchonete/Pages/Mesas_page.dart';
 import 'package:flutter/material.dart';
 
 import '../Constants.dart';
@@ -62,7 +62,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
             backgroundColor: Constants.primaryColor,
             icon: Icon(Icons.settings),
             label: 'Config.',
-          ),          
+          ),
         ],
       ),
     );

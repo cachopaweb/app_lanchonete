@@ -1,10 +1,8 @@
-import 'package:app_lanchonete/Components/CardsMesas.dart';
-import 'package:app_lanchonete/Controller/Comanda.Controller.dart';
-import 'package:app_lanchonete/Controller/Mesas.Controller.dart';
-import 'package:app_lanchonete/Models/mesa_model.dart';
-import 'package:app_lanchonete/Services/MesaService.dart';
+import 'package:lanchonete/Components/CardsMesas.dart';
+import 'package:lanchonete/Controller/Mesas.Controller.dart';
+import 'package:lanchonete/Models/mesa_model.dart';
+import 'package:lanchonete/Services/MesaService.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MesasPage extends StatefulWidget {
   @override

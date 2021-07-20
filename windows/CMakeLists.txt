@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(app_lanchonete LANGUAGES CXX)
+project(lanchonete LANGUAGES CXX)
 
-set(BINARY_NAME "app_lanchonete")
+set(BINARY_NAME "lanchonete")
 
 cmake_policy(SET CMP0063 NEW)
 

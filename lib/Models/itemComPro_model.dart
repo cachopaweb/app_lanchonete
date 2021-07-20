@@ -1,5 +1,5 @@
-import 'package:app_lanchonete/Models/complementos_model.dart';
-import 'package:app_lanchonete/Models/produtos_model.dart';
+import 'package:lanchonete/Models/complementos_model.dart';
+import 'package:lanchonete/Models/produtos_model.dart';
 
 class ItemComPro {
   int cpCodigo;

@@ -1,11 +1,12 @@
-import 'package:app_lanchonete/Components/IconeCarrinho.dart';
+import 'package:lanchonete/Components/IconeCarrinho.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app_lanchonete/Components/ProdutoItem.dart';
-import 'package:app_lanchonete/Models/produtos_model.dart';
-import 'package:app_lanchonete/Services/ComandaService.dart';
-import 'package:app_lanchonete/Services/ProdutosService.dart';
+import 'package:lanchonete/Components/ProdutoItem.dart';
+import 'package:lanchonete/Models/produtos_model.dart';
+import 'package:lanchonete/Pages/Carrinho_page.dart';
+import 'package:lanchonete/Services/ComandaService.dart';
+import 'package:lanchonete/Services/ProdutosService.dart';
 
 class ProdutosPage extends StatefulWidget {
   final int idCategoria;
@@ -39,17 +40,6 @@ class _ProdutosPageState extends State<ProdutosPage> {
             ),
           ),
         ),
-        actions: [
-          IconeCarrinho(),
-          IconButton(
-              icon: Icon(
-                Icons.done,
-                size: 30,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              })
-        ],
       ),
       body: FutureBuilder<List<Produtos>>(
         future: produtoService.fetchProdutos(widget.idCategoria.toString()),
@@ -73,6 +63,23 @@ class _ProdutosPageState extends State<ProdutosPage> {
             ));
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.amber[400],
+        onPressed: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (_) => CarrinhoPage(mesa: widget.mesa),
+            ),
+          );
+        },
+        child: IconeCarrinho(
+          onClick: () => Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (_) => CarrinhoPage(mesa: widget.mesa),
+            ),
+          ),
+        ),
       ),
     );
   }

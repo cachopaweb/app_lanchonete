@@ -1,5 +1,5 @@
-import 'package:app_lanchonete/Controller/Config.Controller.dart';
-import 'package:app_lanchonete/Pages/Principal_page.dart';
+import 'package:lanchonete/Controller/Config.Controller.dart';
+import 'package:lanchonete/Pages/Principal_page.dart';
 import 'package:flutter/material.dart';
 
 class ConfigPage extends StatefulWidget {
@@ -14,9 +14,7 @@ class _ConfigPageState extends State<ConfigPage> {
   @override
   void initState() {
     super.initState();
-    urlBase = ConfigController.instance.getUrlBase().then((value) {
-      return value;
-    });
+    _urlBase = ConfigController.instance.baseURL.value;
   }
 
   @override
