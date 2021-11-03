@@ -1,5 +1,6 @@
 import 'package:lanchonete/Models/comanda_model.dart';
 import 'package:lanchonete/Models/complementos_model.dart';
+import 'package:lanchonete/Models/grade_produto_model.dart';
 import 'package:lanchonete/Models/itens_model.dart';
 import 'package:lanchonete/Models/produtos_model.dart';
 import 'package:lanchonete/Services/ComandaService.dart';
@@ -11,20 +12,33 @@ class ComandaController extends ChangeNotifier {
   double get valorComanda {
     double soma = 0;
     itens.forEach((element) {
-      soma += element.valor;
+      soma += element.valor!;
     });
     return soma;
   }
 
+  double getQuantidade(int produto) {
+    double quantidade = 0;
+    itens.forEach((element) {
+      if (element.produto == produto) {
+        quantidade += element.quantidade!;
+      }
+    });
+    return quantidade;
+  }
+
   int get totalItens => itens.length;
 
-  void adicionaItem(Produtos produto) {
+  void adicionaItem(Produtos produto,
+      {GradeProduto? gradeProduto, double quantidade = 1.0}) {
     itens.add(Itens(
       codigo: itens.length + 1,
       produto: produto.codigo,
-      quantidade: 1.0,
+      quantidade: quantidade,
       valor: produto.valor,
       nome: produto.nome,
+      grade: produto.grade,
+      gradeProduto: gradeProduto,
     ));
     notifyListeners();
   }
@@ -34,12 +48,19 @@ class ComandaController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(int codigo) {
+  void removeItem(int? codigo) {
     itens.removeWhere((e) => e.produto == codigo);
     notifyListeners();
   }
 
-  Future<bool> insereComanda(int mesa) async {
+  void diminuirQuantidade(int? codigo) {
+    var item = itens.firstWhere((e) => e.produto == codigo);
+    item.quantidade = item.quantidade! - 0.5;
+    item.valor = item.valor! * item.quantidade!;
+    notifyListeners();
+  }
+
+  Future<bool> insereComanda(int? mesa) async {
     final comandaService = ComandaService();
     //retorno da função
     var resultado = false;
@@ -50,13 +71,12 @@ class ComandaController extends ChangeNotifier {
       comanda.itens = [...itens];
       //dados da comanda
       var comandaExistente = await comandaService.fetchComanda(mesa);
-      if (comandaExistente.itens.length == 0) {
+      if (comandaExistente.itens!.length == 0) {
         resultado = await comandaService.criaComanda(comanda);
       } else {
         resultado = await comandaService.atualizarComanda(comanda);
       }
       if (resultado) {
-        comandaService.notificarOperacional();
         //limpa os itens
         clear();
       }
@@ -66,13 +86,13 @@ class ComandaController extends ChangeNotifier {
     return resultado;
   }
 
-  adicionaObservacao(int codItem, String obs) {
+  adicionaObservacao(int? codItem, String obs) {
     var indice = itens.indexWhere((element) => element.produto == codItem);
     itens[indice].obs = obs;
     notifyListeners();
   }
 
-  adicionaComplementos(int codItem, List<Complementos> complementos) {
+  adicionaComplementos(int? codItem, List<Complementos> complementos) {
     var indice = itens.indexWhere((element) => element.produto == codItem);
     itens[indice].complementos = complementos;
     notifyListeners();

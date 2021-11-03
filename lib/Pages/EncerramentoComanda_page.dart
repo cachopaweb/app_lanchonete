@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EncerramentoComanda extends StatefulWidget {
-  final int comanda;
+  final int? comanda;
 
-  const EncerramentoComanda({Key key, this.comanda}) : super(key: key);
+  const EncerramentoComanda({Key? key, this.comanda}) : super(key: key);
 
   @override
   _EncerramentoComandaState createState() => _EncerramentoComandaState();
@@ -77,7 +77,6 @@ class _EncerramentoComandaState extends State<EncerramentoComanda> {
         isLoading = false;
         isSuccess = value;
       });
-      comandaService.notificarOperacional();
     });
   }
 

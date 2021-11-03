@@ -6,7 +6,7 @@ import 'package:lanchonete/Models/itemComPro_model.dart';
 import 'package:dio/dio.dart';
 
 class ComandaService {
-  Dio dio;
+  late Dio dio;
   Future<List<Comanda>> fetchComandas() async {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
@@ -18,7 +18,7 @@ class ComandaService {
     dio = new Dio(options);
     final response = await dio.get<List>('/Comandas');
     final resultado =
-        response.data.map((json) => Comanda.fromJson(json)).toList();
+        response.data!.map((json) => Comanda.fromJson(json)).toList();
     return resultado;
   }
 
@@ -32,11 +32,10 @@ class ComandaService {
 
     dio = new Dio(options);
     final response = await dio.post('/Comandas', data: comanda.toJson());
-    await notificarOperacional();
     return response.statusCode == 201;
   }
 
-  Future<Comanda> fetchComanda(int codigo) async {
+  Future<Comanda> fetchComanda(int? codigo) async {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
@@ -55,7 +54,7 @@ class ComandaService {
     return resultado;
   }
 
-  Future<bool> encerrarComanda(int codigo) async {
+  Future<bool> encerrarComanda(int? codigo) async {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
@@ -101,7 +100,7 @@ class ComandaService {
     return resultado;
   }
 
-  Future<bool> deletarItemComanda(int codigo) async {
+  Future<bool> deletarItemComanda(int? codigo) async {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
@@ -112,22 +111,5 @@ class ComandaService {
     dio = new Dio(options);
     final response = await dio.delete('/Comandas/$codigo/itens');
     return response.statusCode == 200;
-  }
-
-  FutureOr<bool> notificarOperacional() async {
-    try {
-      final url = await ConfigController.instance.getUrlBase();
-      BaseOptions options = new BaseOptions(
-          baseUrl: url,
-          connectTimeout: 50000,
-          receiveTimeout: 50000,
-          headers: {'socket_client': 'LANCHONETE'});
-
-      dio = new Dio(options);
-      final response = await dio.get('/socket/notificar');
-      return response.statusCode == 200;
-    } catch (e) {
-      print(e.message);
-    }
   }
 }

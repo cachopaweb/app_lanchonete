@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 'Comanda ou Mesa',
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1.color),
+                    color: Theme.of(context).textTheme.headline1!.color),
               ),
               TextFormField(
                 keyboardType: TextInputType.number,
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 onChanged: (value) {
                   setState(() {
-                    numMesa = int.parse(value) ?? 0;
+                    numMesa = int.parse(value);
                   });
                 },
               ),

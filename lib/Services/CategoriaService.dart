@@ -13,11 +13,11 @@ Future<List<Categoria>> fetchCategorias() async {
   Dio dio = new Dio(options);
   final response = await dio.get<List>('/Categorias');
   final resultado =
-      response.data.map((json) => Categoria.fromJson(json)).toList();
+      response.data!.map((json) => Categoria.fromJson(json)).toList();
   return resultado;
 }
 
-Future<String> fetchFotoCategoria(int codigo) async {
+Future<String?> fetchFotoCategoria(int? codigo) async {
   final url = await ConfigController.instance.getUrlBase();
   BaseOptions options = new BaseOptions(
     baseUrl: url,

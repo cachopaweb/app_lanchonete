@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class IconeCarrinho extends StatelessWidget {
-  final Function onClick;
-  const IconeCarrinho({Key key, this.onClick}) : super(key: key);
+  final Function? onClick;
+  const IconeCarrinho({Key? key, this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class IconeCarrinho extends StatelessWidget {
       children: [
         IconButton(
           icon: Icon(Icons.shopping_cart_outlined),
-          onPressed: comandaController.totalItens > 0 ? onClick : null,
+          onPressed: comandaController.totalItens > 0 ? onClick as void Function()? : null,
         ),
         Positioned(
           top: 8,

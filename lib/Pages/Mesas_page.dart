@@ -36,7 +36,7 @@ class _MesasPageState extends State<MesasPage> {
       for (var mesa in listaMesas) {
         cards.add(
           CardsMesas(
-              numeroMesa: int.parse(mesa.nome),
+              numeroMesa: int.parse(mesa.nome!),
               estado: mesa.estado,
               valor: mesa.valor ?? 0.0),
         );

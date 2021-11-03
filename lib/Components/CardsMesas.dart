@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CardsMesas extends StatelessWidget {
-  final int numeroMesa;
-  final String estado;
+  final int? numeroMesa;
+  final String? estado;
   final dynamic valor;
 
   const CardsMesas({this.numeroMesa, this.estado, this.valor});
 
-  Color corPorEstado(String estado) {
+  Color corPorEstado(String? estado) {
     Color corEscolhida = Constants.mesaAberta;
     switch (estado) {
       case 'A':
@@ -31,7 +31,7 @@ class CardsMesas extends StatelessWidget {
     return corEscolhida;
   }
 
-  String labelPorEstado(String estado) {
+  String labelPorEstado(String? estado) {
     String corEscolhida = 'Livre';
     switch (estado) {
       case 'A':

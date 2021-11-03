@@ -1,16 +1,18 @@
 import 'package:lanchonete/Models/complementos_model.dart';
+import 'package:lanchonete/Models/grade_produto_model.dart';
 
 class Itens {
-  int codigo;
-  int produto;
-  dynamic valor;
-  dynamic quantidade;
-  String estado;
-  String obs;
-  int grade;
-  String nome;
-  List<Complementos> complementos;
-  int id;
+  int? codigo;
+  int? produto;
+  double? valor;
+  double? quantidade;
+  String? estado;
+  String? obs;
+  String? nome;
+  int? grade;
+  List<Complementos>? complementos;
+  int? id;
+  GradeProduto? gradeProduto;
 
   Itens(
       {this.id,
@@ -19,10 +21,11 @@ class Itens {
       this.quantidade,
       this.estado,
       this.obs,
-      this.grade,
       this.nome,
       this.complementos,
-      this.codigo}) {
+      this.codigo,
+      this.grade,
+      this.gradeProduto}) {
     if (this.complementos == null) {
       this.complementos = <Complementos>[];
     }
@@ -30,14 +33,17 @@ class Itens {
 
   factory Itens.fromJson(Map<String, dynamic> json) {
     return Itens(
-        codigo: json['cpCodigo'],
-        produto: json['cpPro'],
-        estado: json['cpEstado'],
-        valor: json['cpValor'],
-        quantidade: json['cpQuantidade'],
-        obs: json['cpObs'],
-        grade: json['cpGra'],
-        nome: json['nome'],
+        codigo: json['cpCodigo'] ?? 0,
+        produto: json['cpPro'] ?? 0,
+        estado: json['cpEstado'] ?? '',
+        valor: json['cpValor'] * 100 / 100 ?? 0,
+        quantidade: json['cpQuantidade'] * 100 / 100 ?? 0,
+        obs: json['cpObs'] ?? '',
+        grade: json['cpGra'] ?? 0,
+        nome: json['nome'] ?? '',
+        gradeProduto: json['cpGra'] != 0
+            ? GradeProduto.fromMap(json['gradeProduto'])
+            : GradeProduto(codigo: 0, valor: 0, tamanho: ''),
         complementos: (json['complementos'] as List)
             .map((e) => Complementos.fromJson(e))
             .toList());
@@ -53,7 +59,8 @@ class Itens {
       "obs": obs,
       "grade": grade,
       "nome": nome,
-      "complementos": complementos.map((c) {
+      "gradeProduto": gradeProduto != null ? gradeProduto!.toJson() : null,
+      "complementos": complementos!.map((c) {
         if (c != null) return c.toJson();
       }).toList()
     };

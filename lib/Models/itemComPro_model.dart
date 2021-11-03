@@ -2,16 +2,16 @@ import 'package:lanchonete/Models/complementos_model.dart';
 import 'package:lanchonete/Models/produtos_model.dart';
 
 class ItemComPro {
-  int cpCodigo;
-  int cpCom;
-  Produtos produto;
-  int cpQuantidade;
-  int cpValor;
-  int cpGra;
-  String cpObs;
-  String cpEstado;
-  String nome;
-  List<Complementos> complementos;
+  int? cpCodigo;
+  int? cpCom;
+  Produtos? produto;
+  int? cpQuantidade;
+  int? cpValor;
+  int? cpGra;
+  String? cpObs;
+  String? cpEstado;
+  String? nome;
+  List<Complementos>? complementos;
 
   ItemComPro(
       {this.cpCodigo,
@@ -39,7 +39,7 @@ class ItemComPro {
     if (json['complementos'] != null) {
       complementos = <Complementos>[];
       json['complementos'].forEach((v) {
-        complementos.add(new Complementos.fromJson(v));
+        complementos!.add(new Complementos.fromJson(v));
       });
     }
   }
@@ -49,7 +49,7 @@ class ItemComPro {
     data['cpCodigo'] = this.cpCodigo;
     data['cpCom'] = this.cpCom;
     if (this.produto != null) {
-      data['produto'] = this.produto.toJson();
+      data['produto'] = this.produto!.toJson();
     }
     data['cpQuantidade'] = this.cpQuantidade;
     data['cpValor'] = this.cpValor;
@@ -58,7 +58,7 @@ class ItemComPro {
     data['cpEstado'] = this.cpEstado;
     data['nome'] = this.nome;
     if (this.complementos != null) {
-      data['complementos'] = this.complementos.map((v) => v.toJson()).toList();
+      data['complementos'] = this.complementos!.map((v) => v.toJson()).toList();
     }
     return data;
   }

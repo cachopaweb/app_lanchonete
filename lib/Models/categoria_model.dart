@@ -1,6 +1,6 @@
 class Categoria {
-  int codigo;
-  String nome;
+  int? codigo;
+  String? nome;
 
   Categoria({this.codigo, this.nome});
 

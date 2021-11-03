@@ -1,9 +1,9 @@
 class Complementos {
-  int codigo;
-  String nome;
+  int? codigo;
+  String? nome;
   dynamic valor;
-  bool selecionado;
-  int quantidade;
+  bool? selecionado;
+  int? quantidade;
 
   Complementos({this.codigo, this.nome, this.valor, this.quantidade}) {
     this.selecionado = false;

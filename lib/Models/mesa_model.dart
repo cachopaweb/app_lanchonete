@@ -1,7 +1,7 @@
 class Mesa {
-  int codigo;
-  String nome;
-  String estado;
+  int? codigo;
+  String? nome;
+  String? estado;
   dynamic valor = 0.0;
 
   Mesa({this.codigo, this.estado, this.nome, this.valor});

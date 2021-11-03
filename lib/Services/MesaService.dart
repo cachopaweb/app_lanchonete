@@ -3,8 +3,8 @@ import 'package:lanchonete/Models/mesa_model.dart';
 import 'package:dio/dio.dart';
 
 class MesaService {
-  BaseOptions options;
-  Dio dio;
+  BaseOptions? options;
+  late Dio dio;
 
   Future<List<Mesa>> fetchMesas() async {
     final url = await ConfigController.instance.getUrlBase();
@@ -16,7 +16,7 @@ class MesaService {
 
     dio = new Dio(options);
     final response = await dio.get<List>('/Mesas');
-    final resultado = response.data.map((json) => Mesa.fromJson(json)).toList();
+    final resultado = response.data!.map((json) => Mesa.fromJson(json)).toList();
     return resultado;
   }
 

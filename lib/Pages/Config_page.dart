@@ -8,8 +8,8 @@ class ConfigPage extends StatefulWidget {
 }
 
 class _ConfigPageState extends State<ConfigPage> {
-  Future<String> urlBase;
-  String _urlBase;
+  Future<String>? urlBase;
+  String? _urlBase;
 
   @override
   void initState() {

@@ -9,15 +9,15 @@ import 'package:lanchonete/Services/ComandaService.dart';
 import 'package:lanchonete/Services/ProdutosService.dart';
 
 class ProdutosPage extends StatefulWidget {
-  final int idCategoria;
-  final String categoria;
-  final int mesa;
+  final int? idCategoria;
+  final String? categoria;
+  final int? mesa;
 
   ProdutosPage({
-    Key key,
-    @required this.idCategoria,
-    @required this.categoria,
-    @required this.mesa,
+    Key? key,
+    required this.idCategoria,
+    required this.categoria,
+    required this.mesa,
   }) : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class _ProdutosPageState extends State<ProdutosPage> {
       appBar: AppBar(
         title: Center(
           child: Text(
-            '${widget.categoria.trim()} | Mesa ${widget.mesa.toString()}',
+            '${widget.categoria!.trim()} | Mesa ${widget.mesa.toString()}',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -47,9 +47,9 @@ class _ProdutosPageState extends State<ProdutosPage> {
           if (snapshot.hasData) {
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                var produto = snapshot.data[index];
+                var produto = snapshot.data![index];
                 return ProdutoItem(
                   produto: produto,
                   mesa: widget.mesa,

@@ -15,11 +15,11 @@ import 'package:lanchonete/Services/CategoriaService.dart';
 import 'package:provider/provider.dart';
 
 class CategoriaPage extends StatefulWidget {
-  final int numeroMesa;
+  final int? numeroMesa;
 
   const CategoriaPage({
-    Key key,
-    @required this.numeroMesa,
+    Key? key,
+    required this.numeroMesa,
   }) : super(key: key);
 
   @override
@@ -63,15 +63,21 @@ class _CategoriaPageState extends State<CategoriaPage> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                child: FutureBuilder<String>(
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: FutureBuilder<String?>(
                   future: fetchFotoCategoria(item.codigo),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return Image.memory(
-                        base64Decode(snapshot.data),
-                        fit: BoxFit.cover,
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.memory(
+                          base64Decode(snapshot.data!),
+                          fit: BoxFit.cover,
+                        ),
                       );
                     } else {
                       return Center(
@@ -93,9 +99,9 @@ class _CategoriaPageState extends State<CategoriaPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        item.nome,
+                        item.nome!,
                         style: TextStyle(
-                            fontSize: item.nome.length > 8 ? 18 : 25,
+                            fontSize: item.nome!.length > 8 ? 18 : 25,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),
@@ -113,7 +119,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
   Widget _cabecalho() {
     return ValueListenableBuilder(
       valueListenable: _isSearching,
-      builder: (_, value, __) {
+      builder: (_, dynamic value, __) {
         return !_isSearching.value
             ? Center(
                 child: Text(
@@ -149,9 +155,9 @@ class _CategoriaPageState extends State<CategoriaPage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return GridView.builder(
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              return _buildCategorias(snapshot.data[index]);
+              return _buildCategorias(snapshot.data![index]);
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -227,15 +233,18 @@ class _CategoriaPageState extends State<CategoriaPage> {
       ),
       body: ValueListenableBuilder(
         valueListenable: _isSearching,
-        builder: (context, searching, _) {
+        builder: (context, dynamic searching, _) {
           return !searching ? _bodyCategoria() : _bodyPesquisaProduto();
         },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.amber[500],
         onPressed: () {
-          Navigator.of(context).push(CupertinoPageRoute(
-              builder: (_) => CarrinhoPage(mesa: widget.numeroMesa)));
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (_) => CarrinhoPage(mesa: widget.numeroMesa),
+            ),
+          );
         },
         child: IconeCarrinho(
           onClick: () => Navigator.of(context).push(

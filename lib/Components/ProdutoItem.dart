@@ -1,9 +1,10 @@
-import 'dart:convert';
 import 'dart:ui';
 
+import 'package:lanchonete/Components/Imagem_Produto_Widget.dart';
 import 'package:lanchonete/Constants.dart';
 import 'package:lanchonete/Controller/Comanda.Controller.dart';
 import 'package:lanchonete/Controller/Theme.Controller.dart';
+import 'package:lanchonete/Models/Itens_Grade_model.dart';
 import 'package:lanchonete/Models/complementos_model.dart';
 import 'package:lanchonete/Models/produtos_model.dart';
 import 'package:lanchonete/Services/ComplementoService.dart';
@@ -12,13 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import 'Grade_produto_widget.dart';
+
 class ProdutoItem extends StatefulWidget {
-  final Produtos produto;
-  final int mesa;
-  final int categoria;
+  final Produtos? produto;
+  final int? mesa;
+  final int? categoria;
 
   const ProdutoItem(
-      {Key key, this.produto, this.mesa, @required this.categoria})
+      {Key? key, this.produto, this.mesa, required this.categoria})
       : super(key: key);
 
   @override
@@ -29,7 +32,6 @@ class _ProdutoItemState extends State<ProdutoItem> {
   final produtosService = ProdutosService();
   String _observacao = '';
   final complementos = ValueNotifier<List<Complementos>>([]);
-  int contador = 0;
   var f = new NumberFormat("##0.00", "pt_BR");
 
   @override
@@ -42,44 +44,11 @@ class _ProdutoItemState extends State<ProdutoItem> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildItem();
+    final comandaController = Provider.of<ComandaController>(context);
+    return _buildItem(comandaController);
   }
 
-  Widget _imagemProduto() {
-    return Container(
-      width: 80,
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(8.0),
-          topLeft: Radius.circular(8.0),
-        ),
-        child: FutureBuilder<String>(
-          future: produtosService.fetchFotoProduto(widget.produto.codigo),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data.length > 0
-                  ? Image.memory(
-                      base64Decode(snapshot.data),
-                      fit: BoxFit.cover,
-                      height: 125,
-                      width: 50,
-                    )
-                  : const Center(child: Text('Sem Foto'));
-            } else {
-              return Center(
-                  child: CircularProgressIndicator(
-                backgroundColor: Colors.amber,
-              ));
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Future<Widget> _telaObservacao() async {
-    final comandaController =
-        Provider.of<ComandaController>(context, listen: false);
+  Future<Widget?> _telaObservacao(ComandaController comandaController) async {
     return await showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -111,7 +80,7 @@ class _ProdutoItemState extends State<ProdutoItem> {
             child: ElevatedButton(
               onPressed: () {
                 comandaController.adicionaObservacao(
-                    widget.produto.codigo, _observacao);
+                    widget.produto!.codigo, _observacao);
                 Navigator.pop(context);
               },
               child: Text(
@@ -129,22 +98,51 @@ class _ProdutoItemState extends State<ProdutoItem> {
     );
   }
 
-  Widget _acoes() {
-    final comandaController =
-        Provider.of<ComandaController>(context, listen: false);
+  Future<void> _buildGradeProduto(Produtos produtos) async {
+    final ProdutosService produtosService = ProdutosService();
+    var itensList = ValueNotifier<List<ItensGrade>>([]);
+    final gradeList = await produtosService.fetchGradesProduto(produtos.codigo);
+    //add como primeiro item o produto selecionado
+    itensList.value.add(ItensGrade(
+      produto: produtos.codigo,
+      nome: produtos.nome,
+      quantidade: 1,
+      grade: gradeList,
+    ));
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: ValueListenableBuilder<List<ItensGrade>>(
+            valueListenable: itensList,
+            builder: (context, itens, _) {
+              return WidgetGradeProduto(
+                itensList: itensList,
+                categoria: widget.categoria!,
+                produto: widget.produto!,
+              );
+            }),
+      ),
+    );
+  }
+
+  Widget _acoes(ComandaController comandaController) {
+    var quantidade = comandaController.getQuantidade(widget.produto!.codigo);
     return Row(
       children: [
         Column(children: [
           MaterialButton(
             height: 20,
             onPressed: () {
-              contador++;
-              comandaController.adicionaItem(widget.produto);
-              setState(() {});
+              if (widget.produto!.grade > 0) {
+                _buildGradeProduto(widget.produto!);
+              } else {
+                comandaController.adicionaItem(widget.produto!);
+              }
             },
             color: Colors.green,
             child: Icon(
-              Icons.exposure_plus_1,
+              Icons.add,
               size: 25,
               color: Colors.white,
             ),
@@ -152,7 +150,9 @@ class _ProdutoItemState extends State<ProdutoItem> {
             shape: CircleBorder(),
           ),
           Text(
-            contador.toString(),
+            widget.produto!.grade > 0
+                ? quantidade.toStringAsPrecision(2)
+                : quantidade.toStringAsPrecision(1),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -162,14 +162,18 @@ class _ProdutoItemState extends State<ProdutoItem> {
           MaterialButton(
             height: 20,
             onPressed: () {
-              contador--;
-              comandaController.removeItem(widget.produto.codigo);
-              if (contador < 0) contador = 0;
-              setState(() {});
+              if (widget.produto!.grade > 0) {
+                comandaController.diminuirQuantidade(widget.produto!.codigo);
+                if (quantidade == 0) {
+                  comandaController.removeItem(widget.produto!.codigo);
+                }
+              } else {
+                comandaController.removeItem(widget.produto!.codigo);
+              }
             },
             color: Colors.red,
             child: Icon(
-              Icons.exposure_minus_1,
+              Icons.remove,
               size: 25,
               color: Colors.white,
             ),
@@ -179,32 +183,32 @@ class _ProdutoItemState extends State<ProdutoItem> {
         ]),
         Column(mainAxisSize: MainAxisSize.min, children: [
           IconButton(
-            onPressed: contador > 0
+            onPressed: quantidade > 0
                 ? () {
-                    _telaObservacao();
+                    _telaObservacao(comandaController);
                   }
                 : null,
             color: Colors.green,
             icon: Icon(
               Icons.edit,
               size: 24,
-              color: contador > 0 ? Colors.black : Colors.grey,
+              color: quantidade > 0 ? Colors.black : Colors.grey,
             ),
           ),
           SizedBox(
             height: 20,
           ),
           IconButton(
-            onPressed: contador > 0
+            onPressed: quantidade > 0
                 ? () {
-                    _adicionais();
+                    _adicionais(comandaController);
                   }
                 : null,
             color: Colors.red,
             icon: Icon(
               Icons.add_circle,
               size: 24,
-              color: contador > 0 ? Colors.black : Colors.grey,
+              color: quantidade > 0 ? Colors.black : Colors.grey,
             ),
           ),
         ]),
@@ -220,7 +224,7 @@ class _ProdutoItemState extends State<ProdutoItem> {
         child: Column(
           children: [
             Text(
-              widget.produto.nome,
+              widget.produto!.nome,
               maxLines: 3,
               style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -229,7 +233,7 @@ class _ProdutoItemState extends State<ProdutoItem> {
               textAlign: TextAlign.start,
             ),
             Text(
-              'R\$ ${f.format(widget.produto.valor)}',
+              'R\$ ${f.format(widget.produto!.valor)}',
               style: TextStyle(
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.start,
@@ -240,7 +244,7 @@ class _ProdutoItemState extends State<ProdutoItem> {
     );
   }
 
-  Widget _buildItem() {
+  Widget _buildItem(ComandaController comandaController) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
       decoration: BoxDecoration(
@@ -252,9 +256,9 @@ class _ProdutoItemState extends State<ProdutoItem> {
       ),
       child: Row(
         children: [
-          _imagemProduto(),
+          ImagemProdutoWidget(codProduto: widget.produto!.codigo),
           _conteudoCentral(),
-          _acoes(),
+          _acoes(comandaController),
         ],
       ),
     );
@@ -265,16 +269,17 @@ class _ProdutoItemState extends State<ProdutoItem> {
       Column(mainAxisSize: MainAxisSize.min, children: [
         MaterialButton(
           height: 10,
-          onPressed: complementos.value[index].selecionado
+          onPressed: complementos.value[index].selecionado!
               ? () {
                   var auxComplemento = complementos.value;
-                  auxComplemento[index].quantidade++;
+                  auxComplemento[index].quantidade =
+                      auxComplemento[index].quantidade! + 1;
                   complementos.value = [];
                   complementos.value = auxComplemento;
                 }
               : null,
           color: Colors.green,
-          child: complementos.value[index].selecionado
+          child: complementos.value[index].selecionado!
               ? Icon(
                   Icons.exposure_plus_1,
                   size: 20,
@@ -287,24 +292,25 @@ class _ProdutoItemState extends State<ProdutoItem> {
         ValueListenableBuilder<List<Complementos>>(
           valueListenable: complementos,
           builder: (context, value, child) => Text(
-            value[index].selecionado ? value[index].quantidade.toString() : '',
+            value[index].selecionado! ? value[index].quantidade.toString() : '',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
         MaterialButton(
           height: 10,
-          onPressed: complementos.value[index].selecionado
+          onPressed: complementos.value[index].selecionado!
               ? () {
                   var auxComplemento = complementos.value;
-                  auxComplemento[index].quantidade--;
-                  if (auxComplemento[index].quantidade < 0)
+                  auxComplemento[index].quantidade =
+                      auxComplemento[index].quantidade! - 1;
+                  if (auxComplemento[index].quantidade! < 0)
                     auxComplemento[index].quantidade = 0;
                   complementos.value = [];
                   complementos.value = auxComplemento;
                 }
               : null,
           color: Colors.red,
-          child: complementos.value[index].selecionado
+          child: complementos.value[index].selecionado!
               ? Icon(
                   Icons.exposure_minus_1,
                   size: 20,
@@ -335,10 +341,10 @@ class _ProdutoItemState extends State<ProdutoItem> {
         children: [
           Checkbox(
             checkColor: Colors.green,
-            onChanged: (bool value) {
+            onChanged: (bool? value) {
               var auxComplemento = complementos.value;
-              auxComplemento[index].selecionado = !complemento.selecionado;
-              if (auxComplemento[index].selecionado) {
+              auxComplemento[index].selecionado = !complemento.selecionado!;
+              if (auxComplemento[index].selecionado!) {
                 auxComplemento[index].quantidade = 1;
               } else {
                 auxComplemento[index].quantidade = 0;
@@ -348,16 +354,14 @@ class _ProdutoItemState extends State<ProdutoItem> {
             },
             value: complemento.selecionado,
           ),
-          Text(complemento.nome.padRight(15).substring(0, 15)),
+          Text(complemento.nome!.padRight(15).substring(0, 15)),
           _acoesAdicional(index),
         ],
       ),
     );
   }
 
-  Future<Widget> _adicionais() async {
-    final comandaController =
-        Provider.of<ComandaController>(context, listen: false);
+  Future<Widget?> _adicionais(ComandaController comandaController) async {
     return await showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -385,9 +389,9 @@ class _ProdutoItemState extends State<ProdutoItem> {
                   child: ElevatedButton(
                     onPressed: () {
                       comandaController.adicionaComplementos(
-                        widget.produto.codigo,
+                        widget.produto!.codigo,
                         complementos.value
-                            .where((element) => element.selecionado)
+                            .where((element) => element.selecionado!)
                             .toList(),
                       );
                       Navigator.pop(context);

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ConfigController {
   static final ConfigController instance = ConfigController._();
   final ILocalStorage storage = LocalStorageService();
-  final baseURL = ValueNotifier<String>('');
+  final baseURL = ValueNotifier<String?>('');
 
   Future<String> getUrlBase() async {
     if (baseURL.value != '') {
@@ -26,7 +26,7 @@ class ConfigController {
     }
   }
 
-  changeUrlBase(String value) {
+  changeUrlBase(String? value) {
     baseURL.value = value;
     storage.put('urlBase', value);
   }

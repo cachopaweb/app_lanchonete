@@ -11,7 +11,7 @@ enum Paginas { home, mesas, consultaProdutos, configuracao }
 class PrincipalPage extends StatefulWidget {
   final Paginas paginas;
 
-  const PrincipalPage({Key key, @required this.paginas}) : super(key: key);
+  const PrincipalPage({Key? key, required this.paginas}) : super(key: key);
 
   @override
   _PrincipalPageState createState() => _PrincipalPageState(paginas.index);

@@ -1,3 +1,4 @@
+import 'package:lanchonete/Components/Item_Lista_widget.dart';
 import 'package:lanchonete/Models/itens_model.dart';
 import 'package:lanchonete/Pages/Principal_page.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CarrinhoPage extends StatefulWidget {
-  final int mesa;
+  final int? mesa;
 
   CarrinhoPage({
-    Key key,
-    @required this.mesa,
+    Key? key,
+    required this.mesa,
   }) : super(key: key);
 
   @override
@@ -60,7 +61,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                           },
                         ), (route) => false);
                         final snackbar = const SnackBar(
-                            content: Text('Falha ao inserir comanda!'));
+                            content: Text('Comanda inserida com sucesso!'));
                         ScaffoldMessenger.of(context).showSnackBar(snackbar);
                       }
                     });
@@ -78,10 +79,10 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
     }
 
     _buildComplementos(Itens item) {
-      return item.complementos.isNotEmpty
+      return item.complementos!.isNotEmpty
           ? Column(
               mainAxisSize: MainAxisSize.min,
-              children: item.complementos
+              children: item.complementos!
                   .map(
                     (e) => ListTile(
                       visualDensity: VisualDensity(vertical: 0.1),
@@ -91,7 +92,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                         style: TextStyle(fontSize: 12),
                       ),
                       trailing: Text(
-                        '${e.quantidade.toString()} * ${f.format(e.valor)} = ${f.format(e.quantidade * e.valor)}',
+                        '${e.quantidade.toString()} * ${f.format(e.valor)} = ${f.format(e.quantidade! * e.valor)}',
                         style: TextStyle(fontSize: 12),
                       ),
                     ),
@@ -134,6 +135,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
         if (confirmar) {
           Provider.of<ComandaController>(context, listen: false)
               .removeItem(item.produto);
+          setState(() {});
         }
       });
     }
@@ -156,7 +158,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
     _buildTotal(Itens item) {
       double totalComplementos = 0;
 
-      for (var item in item.complementos) {
+      for (var item in item.complementos!) {
         totalComplementos += item.valor * item.quantidade;
       }
 
@@ -165,7 +167,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
           'Total: ',
           textAlign: TextAlign.end,
         ),
-        trailing: Text(f.format(item.valor + totalComplementos)),
+        trailing: Text(f.format(item.valor! + totalComplementos)),
       );
     }
 
@@ -174,34 +176,9 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            leading: Text(
-              item.nome.trim().padRight(18).substring(0, 18) ?? "",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      _confirmarExclusao(item);
-                    }),
-                Text(
-                  f.format(item.valor),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
+          ItemListaWidget(item: item, onDelete: _confirmarExclusao),
           _buildComplementos(item),
-          item.complementos.length > 0 ? _buildTotal(item) : SizedBox(),
+          item.complementos!.length > 0 ? _buildTotal(item) : SizedBox(),
           _buildObservacao(item)
         ],
       );
@@ -246,7 +223,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
             },
           ),
           Text(
-            'Total ${f.format(comandaController.valorComanda ?? 0)}',
+            'Total ${f.format(comandaController.valorComanda)}',
             style: TextStyle(fontSize: 35),
           ),
           Container(

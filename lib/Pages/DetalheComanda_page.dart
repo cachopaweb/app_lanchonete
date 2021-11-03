@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:lanchonete/Components/Item_Lista_widget.dart';
 import 'package:lanchonete/Constants.dart';
 import 'package:lanchonete/Controller/Mesas.Controller.dart';
 import 'package:lanchonete/Models/comanda_model.dart';
@@ -12,9 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DetalheComandaPage extends StatefulWidget {
-  final int numeroMesa;
+  final int? numeroMesa;
 
-  const DetalheComandaPage({Key key, this.numeroMesa}) : super(key: key);
+  const DetalheComandaPage({Key? key, this.numeroMesa}) : super(key: key);
 
   @override
   _DetalheComandaPageState createState() => _DetalheComandaPageState();
@@ -28,10 +29,10 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
   final recarregarItens = ValueNotifier(false);
 
   _buildComplementos(Itens item) {
-    return item.complementos.isNotEmpty
+    return item.complementos!.isNotEmpty
         ? Column(
             mainAxisSize: MainAxisSize.min,
-            children: item.complementos
+            children: item.complementos!
                 .map(
                   (e) => ListTile(
                     visualDensity: VisualDensity(vertical: 0.1),
@@ -41,7 +42,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
                       style: TextStyle(fontSize: 12),
                     ),
                     trailing: Text(
-                      '${e.quantidade.toString()} * ${f.format(e.valor)} = ${f.format(e.quantidade * e.valor)}',
+                      '${e.quantidade.toString()} * ${f.format(e.valor)} = ${f.format(e.quantidade! * e.valor)}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
@@ -73,13 +74,12 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
             onPressed: () {
               comandaService.deletarItemComanda(item.codigo).then((value) {
                 if (value) {
-                  comandaService.notificarOperacional();
                   final snackBar = SnackBar(
                     content: Text('Item deletado com sucesso!'),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  comanda.itens.remove(item);
-                  if (comanda.itens.length == 0) {
+                  comanda.itens!.remove(item);
+                  if (comanda.itens!.length == 0) {
                     Navigator.pop(context);
                     MesaController.instance.atualizar.value = true;
                   } else {
@@ -92,6 +92,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 Navigator.pop(context);
+                setState(() {});
               });
             },
             child: Text(
@@ -112,7 +113,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
               style: TextStyle(fontSize: 15),
             ),
             subtitle: Text(
-              item.obs,
+              item.obs!,
               style: TextStyle(fontSize: 15),
             ),
           )
@@ -122,7 +123,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
   _buildTotal(Itens item) {
     double totalComplementos = 0;
 
-    for (var item in item.complementos) {
+    for (var item in item.complementos!) {
       totalComplementos += item.valor * item.quantidade;
     }
 
@@ -131,7 +132,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
         'Total: ',
         textAlign: TextAlign.end,
       ),
-      trailing: Text(f.format(item.valor + totalComplementos)),
+      trailing: Text(f.format(item.valor! + totalComplementos)),
     );
   }
 
@@ -140,35 +141,9 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        ListTile(
-          leading: Text(
-            item.nome.trim().padRight(18).substring(0, 18) ?? "",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                f.format(item.valor),
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  _confirmarExclusao(item);
-                },
-              ),
-            ],
-          ),
-        ),
+        ItemListaWidget(item: item, onDelete: _confirmarExclusao),
         _buildComplementos(item),
-        item.complementos.length > 0 ? _buildTotal(item) : SizedBox(),
+        item.complementos!.length > 0 ? _buildTotal(item) : SizedBox(),
         _buildObservacao(item)
       ],
     );
@@ -255,11 +230,11 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
   _buildItens() {
     return Flexible(
       child: ListView.builder(
-        itemCount: comanda.itens.length,
+        itemCount: comanda.itens!.length,
         itemBuilder: (context, index) => Card(
           margin: EdgeInsets.all(1),
           elevation: 5,
-          child: _itemLista(comanda.itens[index]),
+          child: _itemLista(comanda.itens![index]),
         ),
       ),
     );
@@ -277,10 +252,10 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
       ),
       body: ValueListenableBuilder(
         valueListenable: recarregarItens,
-        builder: (context, value, child) => Column(
+        builder: (context, dynamic value, child) => Column(
           children: [
             !carregando
-                ? comanda.itens.isNotEmpty
+                ? comanda.itens!.isNotEmpty
                     ? _buildItens()
                     : Center(
                         child: Text(
