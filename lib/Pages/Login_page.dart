@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 50),
                 height: 200,
-                child: Image.asset('assets/images/Logo_147.png'),
+                child: Image.asset('assets/images/logo.png'),
               ),
               SizedBox(
                 height: 50,
@@ -29,7 +29,10 @@ class LoginPage extends StatelessWidget {
                       color: Colors.amber,
                       borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   height: 40,
-                  child: RaisedButton(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.amber),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -46,8 +49,6 @@ class LoginPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    color: Colors.amber,
-                    elevation: 5,
                     onPressed: () {
                       Navigator.pushReplacement(context,
                           CupertinoPageRoute(builder: (_) {
