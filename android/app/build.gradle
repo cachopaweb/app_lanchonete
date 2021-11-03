@@ -58,7 +58,7 @@ android {
            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
            storePassword keystoreProperties['storePassword']
        }
-   }
+   }    
    buildTypes {
        release {
            signingConfig signingConfigs.release
@@ -72,4 +72,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+android {
+    ndkVersion "21.1.6352462"
 }
