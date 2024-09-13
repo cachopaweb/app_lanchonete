@@ -10,13 +10,14 @@ class MesaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
     final response = await dio.get<List>('/Mesas');
-    final resultado = response.data!.map((json) => Mesa.fromJson(json)).toList();
+    final resultado =
+        response.data!.map((json) => Mesa.fromJson(json)).toList();
     return resultado;
   }
 
@@ -24,8 +25,8 @@ class MesaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);

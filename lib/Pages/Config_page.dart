@@ -1,5 +1,5 @@
 import 'package:lanchonete/Controller/Config.Controller.dart';
-import 'package:lanchonete/Pages/Principal_page.dart';
+import 'package:lanchonete/Pages/Login_page.dart';
 import 'package:flutter/material.dart';
 
 class ConfigPage extends StatefulWidget {
@@ -37,9 +37,7 @@ class _ConfigPageState extends State<ConfigPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PrincipalPage(
-                    paginas: Paginas.mesas,
-                  ),
+                  builder: (context) => LoginPage(),
                 ),
               );
             },

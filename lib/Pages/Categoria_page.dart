@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:lanchonete/Components/IconeCarrinho.dart';
 import 'package:lanchonete/Components/ProdutoItem.dart';
+import 'package:lanchonete/Controller/Comanda.Controller.dart';
 import 'package:lanchonete/Models/produtos_model.dart';
 import 'package:lanchonete/Pages/Carrinho_page.dart';
 import 'package:lanchonete/Services/ProdutosService.dart';
@@ -15,7 +15,7 @@ import 'package:lanchonete/Services/CategoriaService.dart';
 import 'package:provider/provider.dart';
 
 class CategoriaPage extends StatefulWidget {
-  final int? numeroMesa;
+  final int numeroMesa;
 
   const CategoriaPage({
     Key? key,
@@ -167,7 +167,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
           if (snapshot.hasError) {
             final snackBar = SnackBar(
                 content: Text(
-                    'Erro ao buscar categorias!\n ${snapshot.error.toString()}'));
+                    'Erro ao buscar categorias!\n Verifique a configuração do Servidor Local!'));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             return snackBar;
           } else {
@@ -219,37 +219,54 @@ class _CategoriaPageState extends State<CategoriaPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _cabecalho(),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              _isSearching.value = !_isSearching.value;
-            },
-          ),
-        ],
-      ),
-      body: ValueListenableBuilder(
-        valueListenable: _isSearching,
-        builder: (context, dynamic searching, _) {
-          return !searching ? _bodyCategoria() : _bodyPesquisaProduto();
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber[500],
-        onPressed: () {
-          Navigator.of(context).push(
-            CupertinoPageRoute(
-              builder: (_) => CarrinhoPage(mesa: widget.numeroMesa),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        var controller = Provider.of<ComandaController>(context, listen: false);
+        var cartIsEmpty = controller.isEmpty;
+        if (cartIsEmpty) {
+          Navigator.pop(context);
+          return;
+        } else {
+          final snackBar = SnackBar(
+              content: Text(
+                  'Não é possível sair da tela enquanto houver produtos na mesa!'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          return;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: _cabecalho(),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                _isSearching.value = !_isSearching.value;
+              },
             ),
-          );
-        },
-        child: IconeCarrinho(
-          onClick: () => Navigator.of(context).push(
-            CupertinoPageRoute(
-              builder: (_) => CarrinhoPage(mesa: widget.numeroMesa),
+          ],
+        ),
+        body: ValueListenableBuilder(
+          valueListenable: _isSearching,
+          builder: (context, dynamic searching, _) {
+            return !searching ? _bodyCategoria() : _bodyPesquisaProduto();
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.amber[500],
+          onPressed: () {
+            Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (_) => CarrinhoPage(mesa: widget.numeroMesa),
+              ),
+            );
+          },
+          child: IconeCarrinho(
+            onClick: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (_) => CarrinhoPage(mesa: widget.numeroMesa),
+              ),
             ),
           ),
         ),

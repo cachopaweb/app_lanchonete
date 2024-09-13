@@ -11,8 +11,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -26,8 +26,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -39,8 +39,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -58,8 +58,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -71,8 +71,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -85,8 +85,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -104,8 +104,8 @@ class ComandaService {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);

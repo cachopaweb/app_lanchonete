@@ -1,5 +1,4 @@
 import 'package:lanchonete/Components/CustomSwitch.dart';
-import 'package:lanchonete/Constants.dart';
 import 'package:lanchonete/Pages/Categoria_page.dart';
 import 'package:lanchonete/Pages/DetalheComanda_page.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 'Comanda ou Mesa',
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1!.color),
+                    color: Theme.of(context).textTheme.displayLarge!.color),
               ),
               TextFormField(
                 keyboardType: TextInputType.number,
@@ -147,6 +146,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  ComandaController() {}
 }

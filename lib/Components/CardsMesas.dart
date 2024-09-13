@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:lanchonete/Constants.dart';
 import 'package:lanchonete/Pages/Categoria_page.dart';
 import 'package:lanchonete/Pages/DetalheComanda_page.dart';
@@ -8,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CardsMesas extends StatelessWidget {
-  final int? numeroMesa;
+  final int numeroMesa;
   final String? estado;
   final dynamic valor;
 
-  const CardsMesas({this.numeroMesa, this.estado, this.valor});
+  const CardsMesas({required this.numeroMesa, this.estado, this.valor});
 
   Color corPorEstado(String? estado) {
     Color corEscolhida = Constants.mesaAberta;
@@ -100,7 +98,7 @@ class CardsMesas extends StatelessWidget {
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 40),
+                    fontSize: 35),
               ),
               SizedBox(
                 height: 8,

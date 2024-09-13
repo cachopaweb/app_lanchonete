@@ -12,18 +12,21 @@ class ItemComPro {
   String? cpEstado;
   String? nome;
   List<Complementos>? complementos;
+  int? usuario;
 
-  ItemComPro(
-      {this.cpCodigo,
-      this.cpCom,
-      this.produto,
-      this.cpQuantidade,
-      this.cpValor,
-      this.cpGra,
-      this.cpObs,
-      this.cpEstado,
-      this.nome,
-      this.complementos});
+  ItemComPro({
+    this.cpCodigo,
+    this.cpCom,
+    this.produto,
+    this.cpQuantidade,
+    this.cpValor,
+    this.cpGra,
+    this.cpObs,
+    this.cpEstado,
+    this.nome,
+    this.complementos,
+    this.usuario,
+  });
 
   ItemComPro.fromJson(Map<String, dynamic> json) {
     cpCodigo = json['cpCodigo'];
@@ -38,10 +41,13 @@ class ItemComPro {
     nome = json['nome'];
     if (json['complementos'] != null) {
       complementos = <Complementos>[];
-      json['complementos'].forEach((v) {
-        complementos!.add(new Complementos.fromJson(v));
-      });
+      json['complementos'].forEach(
+        (v) {
+          complementos!.add(new Complementos.fromJson(v));
+        },
+      );
     }
+    usuario = json['usuario'];
   }
 
   Map<String, dynamic> toJson() {
@@ -57,6 +63,7 @@ class ItemComPro {
     data['cpObs'] = this.cpObs;
     data['cpEstado'] = this.cpEstado;
     data['nome'] = this.nome;
+    data['usuario'] = this.usuario;
     if (this.complementos != null) {
       data['complementos'] = this.complementos!.map((v) => v.toJson()).toList();
     }

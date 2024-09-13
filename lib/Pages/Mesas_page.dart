@@ -17,18 +17,24 @@ class _MesasPageState extends State<MesasPage> {
     super.initState();
     mesaService
         .fetchMesas()
-        .then((dados) => setState(() => {listaMesas = dados}))
+        .then((dados) => setState(() {
+              listaMesas = dados;
+            }))
         .catchError((error) {
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erro ao Buscar mesas!\n ${error.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Erro ao Buscar mesas!\n Verifique a configuração do Servidor Local!'),
+        ),
+      );
     });
   }
 
   List<Widget> buildMesas(bool atualizar) {
     if (atualizar) {
-      mesaService
-          .fetchMesas()
-          .then((dados) => setState(() => {listaMesas = dados}));
+      mesaService.fetchMesas().then((dados) => setState(() {
+            listaMesas = dados;
+          }));
       MesaController.instance.atualizar.value = false;
     }
     List<Widget> cards = <Widget>[];
@@ -53,6 +59,10 @@ class _MesasPageState extends State<MesasPage> {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 60), () {
+      MesaController.instance.atualizar.value = true;
+    });
+
     return ValueListenableBuilder<bool>(
       valueListenable: MesaController.instance.atualizar,
       builder: (context, value, child) => Scaffold(

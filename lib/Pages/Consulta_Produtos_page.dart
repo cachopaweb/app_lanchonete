@@ -31,7 +31,8 @@ class _ConsultaProdutosPageState extends State<ConsultaProdutosPage> {
         carregando = false;
       });
       final snackBar = SnackBar(
-          content: Text('Erro ao buscar produtos! \n ${error.toString()}'));
+          content: Text(
+              'Erro ao buscar produtos! \n Verifique a configuração do Servidor Local!'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }

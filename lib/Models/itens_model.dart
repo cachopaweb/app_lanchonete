@@ -13,6 +13,8 @@ class Itens {
   List<Complementos>? complementos;
   int? id;
   GradeProduto? gradeProduto;
+  int? usuario;
+  String? idAgrupamento;
 
   Itens(
       {this.id,
@@ -25,7 +27,9 @@ class Itens {
       this.complementos,
       this.codigo,
       this.grade,
-      this.gradeProduto}) {
+      this.gradeProduto,
+      this.usuario,
+      this.idAgrupamento}) {
     if (this.complementos == null) {
       this.complementos = <Complementos>[];
     }
@@ -33,20 +37,23 @@ class Itens {
 
   factory Itens.fromJson(Map<String, dynamic> json) {
     return Itens(
-        codigo: json['cpCodigo'] ?? 0,
-        produto: json['cpPro'] ?? 0,
-        estado: json['cpEstado'] ?? '',
-        valor: json['cpValor'] * 100 / 100 ?? 0,
-        quantidade: json['cpQuantidade'] * 100 / 100 ?? 0,
-        obs: json['cpObs'] ?? '',
-        grade: json['cpGra'] ?? 0,
-        nome: json['nome'] ?? '',
-        gradeProduto: json['cpGra'] != 0
-            ? GradeProduto.fromMap(json['gradeProduto'])
-            : GradeProduto(codigo: 0, valor: 0, tamanho: ''),
-        complementos: (json['complementos'] as List)
-            .map((e) => Complementos.fromJson(e))
-            .toList());
+      codigo: json['cpCodigo'] ?? 0,
+      produto: json['cpPro'] ?? 0,
+      estado: json['cpEstado'] ?? '',
+      valor: json['cpValor'] * 100 / 100 ?? 0,
+      quantidade: json['cpQuantidade'] * 100 / 100 ?? 0,
+      obs: json['cpObs'] ?? '',
+      grade: json['cpGra'] ?? 0,
+      nome: json['nome'] ?? '',
+      gradeProduto: json['cpGra'] != 0
+          ? GradeProduto.fromMap(json['gradeProduto'])
+          : GradeProduto(codigo: 0, valor: 0, tamanho: ''),
+      complementos: (json['complementos'] as List)
+          .map((e) => Complementos.fromJson(e))
+          .toList(),
+      usuario: json['usuario'],
+      idAgrupamento: json['idAgrupamento'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -60,9 +67,11 @@ class Itens {
       "grade": grade,
       "nome": nome,
       "gradeProduto": gradeProduto != null ? gradeProduto!.toJson() : null,
-      "complementos": complementos!.map((c) {
-        if (c != null) return c.toJson();
-      }).toList()
+      "complementos": complementos != null
+          ? complementos!.map((c) => c.toJson()).toList()
+          : null,
+      "usuario": usuario,
+      "idAgrupamento": idAgrupamento,
     };
   }
 }

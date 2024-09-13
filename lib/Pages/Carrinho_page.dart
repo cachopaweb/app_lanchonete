@@ -1,15 +1,15 @@
+import 'package:lanchonete/Components/Acoes_widget.dart';
 import 'package:lanchonete/Components/Item_Lista_widget.dart';
 import 'package:lanchonete/Models/itens_model.dart';
-import 'package:lanchonete/Pages/Principal_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lanchonete/Controller/Comanda.Controller.dart';
-import 'package:lanchonete/Controller/Mesas.Controller.dart';
 import 'package:intl/intl.dart';
+import 'package:lanchonete/Pages/Tela_carregamento_page.dart';
 import 'package:provider/provider.dart';
 
 class CarrinhoPage extends StatefulWidget {
-  final int? mesa;
+  final int mesa;
 
   CarrinhoPage({
     Key? key,
@@ -50,21 +50,19 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                   width: 30,
                 ),
                 TextButton(
-                  onPressed: () {
-                    comandaController.insereComanda(widget.mesa).then((value) {
-                      if (value) {
-                        MesaController.instance.atualizar.value = true;
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                          builder: (_) {
-                            return PrincipalPage(paginas: Paginas.mesas);
-                          },
-                        ), (route) => false);
-                        final snackbar = const SnackBar(
-                            content: Text('Comanda inserida com sucesso!'));
-                        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                      }
-                    });
+                  onPressed: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TelaCarregamento(
+                          messageAwait: 'Aguarde enviando comanda...',
+                          messageSuccess: 'Comanda enviada com sucesso!',
+                          messageError: 'Erro ao enviar comanda!',
+                          finalization: false,
+                          mesa: widget.mesa,
+                          comanda: 0,
+                        ),
+                      ),
+                    );
                   },
                   child: Text(
                     'Confirmar',
@@ -81,7 +79,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
     _buildComplementos(Itens item) {
       return item.complementos!.isNotEmpty
           ? Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: item.complementos!
                   .map(
                     (e) => ListTile(
@@ -134,14 +132,14 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
       ).then((confirmar) {
         if (confirmar) {
           Provider.of<ComandaController>(context, listen: false)
-              .removeItem(item.produto);
+              .removeItemCarrinho(item);
           setState(() {});
         }
       });
     }
 
     _buildObservacao(Itens item) {
-      return item.obs != ''
+      return item.obs != null && item.obs!.isNotEmpty
           ? ListTile(
               title: Text(
                 'Observação:',
@@ -179,7 +177,15 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
           ItemListaWidget(item: item, onDelete: _confirmarExclusao),
           _buildComplementos(item),
           item.complementos!.length > 0 ? _buildTotal(item) : SizedBox(),
-          _buildObservacao(item)
+          Row(
+            children: [
+              Expanded(child: _buildObservacao(item)),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AcoesWidget(item: item),
+              ),
+            ],
+          ),
         ],
       );
     }
@@ -199,11 +205,8 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            'Carrinho | Mesa Nº ${widget.mesa.toString().padLeft(2, '0')}',
-            style: Theme.of(context).textTheme.headline1,
-          ),
+        title: Text(
+          'Carrinho | Mesa Nº ${widget.mesa.toString().padLeft(2, '0')}',
         ),
       ),
       body: Column(
@@ -222,34 +225,48 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                     );
             },
           ),
-          Text(
-            'Total ${f.format(comandaController.valorComanda)}',
-            style: TextStyle(fontSize: 35),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.all(
-                Radius.circular(8),
-              ),
-            ),
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () {
-                _confirmarSalvamento();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Enviar Comanda'),
-                  SizedBox(width: 10),
-                  Icon(Icons.send),
-                ],
-              ),
-            ),
-          ),
+          !comandaController.isEmpty
+              ? Consumer<ComandaController>(builder: (context, comanda, _) {
+                  return Text(
+                    'Total ${f.format(comanda.valorComanda)}',
+                    style: TextStyle(fontSize: 35),
+                  );
+                })
+              : SizedBox(),
+          !comandaController.isEmpty
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                  ),
+                  margin: EdgeInsets.all(10),
+                  width: double.infinity,
+                  height: 50,
+                  child: TextButton(
+                    onPressed: () {
+                      _confirmarSalvamento();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Enviar Comanda',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
     );

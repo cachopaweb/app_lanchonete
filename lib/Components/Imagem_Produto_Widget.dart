@@ -38,7 +38,12 @@ class ImagemProdutoWidget extends StatelessWidget {
                       height: altura,
                       width: largura,
                     )
-                  : const Center(child: Text('Sem Foto'));
+                  : const Center(
+                      child: Text(
+                        'Sem Foto',
+                        textAlign: TextAlign.center,
+                      ),
+                    );
             } else {
               return Center(
                   child: CircularProgressIndicator(

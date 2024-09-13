@@ -9,31 +9,35 @@ class ProdutosService {
 
   Future<List<Produtos>> fetchProdutos(String filtro) async {
     String url = '';
-    final baseurl = await ConfigController.instance.getUrlBase();
-    BaseOptions options = new BaseOptions(
-      baseUrl: baseurl,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
-    );
+    try {
+      final baseurl = await ConfigController.instance.getUrlBase();
+      BaseOptions options = new BaseOptions(
+        baseUrl: baseurl,
+        connectTimeout: Duration(milliseconds: 50000),
+        receiveTimeout: Duration(milliseconds: 50000),
+      );
 
-    dio = new Dio(options);
-    if (filtro != '') {
-      url = '/Produtos?categoria=$filtro';
-    } else {
-      url = '/Produtos';
+      dio = new Dio(options);
+      if (filtro != '') {
+        url = '/Produtos$filtro';
+      } else {
+        url = '/Produtos';
+      }
+      final response = await dio.get<List>(url);
+      final resultado =
+          response.data!.map((json) => Produtos.fromJson(json)).toList();
+      return resultado;
+    } catch (e) {
+      throw Exception(e);
     }
-    final response = await dio.get<List>(url);
-    final resultado =
-        response.data!.map((json) => Produtos.fromJson(json)).toList();
-    return resultado;
   }
 
-  Future<Produtos?> fetchProduto(int codigo) async {
+  Future<Produtos> fetchProduto(int codigo) async {
     final url = await ConfigController.instance.getUrlBase();
     BaseOptions options = new BaseOptions(
       baseUrl: url,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: Duration(milliseconds: 50000),
+      receiveTimeout: Duration(milliseconds: 50000),
     );
 
     dio = new Dio(options);
@@ -41,54 +45,66 @@ class ProdutosService {
       final response = await dio.get('/Produtos/$codigo');
       return Produtos.fromJson(response.data);
     } catch (e) {
-      print(e.toString());
+      throw Exception(e);
     }
   }
 
   Future<String?> fetchFotoProduto(int? codigo) async {
     String url = '';
-    url = '/Produtos/$codigo/foto';
-    final baseurl = await ConfigController.instance.getUrlBase();
-    BaseOptions options = new BaseOptions(
-      baseUrl: baseurl,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
-    );
+    try {
+      url = '/Produtos/$codigo/foto';
+      final baseurl = await ConfigController.instance.getUrlBase();
+      BaseOptions options = new BaseOptions(
+        baseUrl: baseurl,
+        connectTimeout: Duration(milliseconds: 50000),
+        receiveTimeout: Duration(milliseconds: 50000),
+      );
 
-    dio = new Dio(options);
-    final response = await dio.get(url);
-    final resultado = Map<String, dynamic>.from(response.data);
-    return resultado['base64'];
+      dio = new Dio(options);
+      final response = await dio.get(url);
+      final resultado = Map<String, dynamic>.from(response.data);
+      return resultado['base64'];
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future<List<GradeProduto>> fetchGradesProduto(int codigo) async {
     String url = '';
-    url = '/Produtos/Grades/$codigo';
-    final baseurl = await ConfigController.instance.getUrlBase();
-    BaseOptions options = new BaseOptions(
-      baseUrl: baseurl,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
-    );
+    try {
+      url = '/Produtos/Grades/$codigo';
+      final baseurl = await ConfigController.instance.getUrlBase();
+      BaseOptions options = new BaseOptions(
+        baseUrl: baseurl,
+        connectTimeout: Duration(milliseconds: 50000),
+        receiveTimeout: Duration(milliseconds: 50000),
+      );
 
-    dio = new Dio(options);
-    final response = await dio.get(url);
-    final gradeList = response.data as List;
-    return gradeList.map((grade) => GradeProduto.fromMap(grade)).toList();
+      dio = new Dio(options);
+      final response = await dio.get(url);
+      final gradeList = response.data as List;
+      return gradeList.map((grade) => GradeProduto.fromMap(grade)).toList();
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future<GradeProduto> fetchGradeProduto(int codProduto, String tamanho) async {
     String url = '';
-    url = '/Produtos/Grades/$codProduto/$tamanho';
-    final baseurl = await ConfigController.instance.getUrlBase();
-    BaseOptions options = new BaseOptions(
-      baseUrl: baseurl,
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
-    );
+    try {
+      url = '/Produtos/Grades/$codProduto/$tamanho';
+      final baseurl = await ConfigController.instance.getUrlBase();
+      BaseOptions options = new BaseOptions(
+        baseUrl: baseurl,
+        connectTimeout: Duration(milliseconds: 50000),
+        receiveTimeout: Duration(milliseconds: 50000),
+      );
 
-    dio = new Dio(options);
-    final response = await dio.get(url);
-    return GradeProduto.fromMap(response.data);
+      dio = new Dio(options);
+      final response = await dio.get(url);
+      return GradeProduto.fromMap(response.data);
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

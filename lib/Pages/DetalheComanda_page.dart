@@ -1,21 +1,21 @@
-import 'dart:ui';
-
 import 'package:lanchonete/Components/Item_Lista_widget.dart';
 import 'package:lanchonete/Constants.dart';
+import 'package:lanchonete/Controller/Comanda.Controller.dart';
 import 'package:lanchonete/Controller/Mesas.Controller.dart';
 import 'package:lanchonete/Models/comanda_model.dart';
 import 'package:lanchonete/Models/itens_model.dart';
 import 'package:lanchonete/Pages/Categoria_page.dart';
-import 'package:lanchonete/Pages/EncerramentoComanda_page.dart';
-import 'package:lanchonete/Services/ComandaService.dart';
+import 'package:lanchonete/Pages/Tela_carregamento_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DetalheComandaPage extends StatefulWidget {
-  final int? numeroMesa;
+  final int numeroMesa;
 
-  const DetalheComandaPage({Key? key, this.numeroMesa}) : super(key: key);
+  const DetalheComandaPage({Key? key, required this.numeroMesa})
+      : super(key: key);
 
   @override
   _DetalheComandaPageState createState() => _DetalheComandaPageState();
@@ -23,7 +23,6 @@ class DetalheComandaPage extends StatefulWidget {
 
 class _DetalheComandaPageState extends State<DetalheComandaPage> {
   var f = NumberFormat('##0.00', 'pt_BR');
-  final comandaService = ComandaService();
   Comanda comanda = Comanda();
   bool carregando = false;
   final recarregarItens = ValueNotifier(false);
@@ -72,7 +71,9 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
           ),
           TextButton(
             onPressed: () {
-              comandaService.deletarItemComanda(item.codigo).then((value) {
+              Provider.of<ComandaController>(context, listen: false)
+                  .deletarItemComanda(item.codigo!)
+                  .then((value) {
                 if (value) {
                   final snackBar = SnackBar(
                     content: Text('Item deletado com sucesso!'),
@@ -92,7 +93,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
                 Navigator.pop(context);
-                setState(() {});
+                _buscarComanda();
               });
             },
             child: Text(
@@ -173,8 +174,13 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) {
-                  return EncerramentoComanda(
+                  return TelaCarregamento(
+                    messageAwait: 'Aguarde o encerramento...',
+                    messageSuccess: 'Encerramento realizado com sucesso...',
+                    messageError: 'Erro ao tentar realizar o fechamento!',
                     comanda: widget.numeroMesa,
+                    finalization: true,
+                    mesa: widget.numeroMesa,
                   );
                 }),
               );
@@ -208,10 +214,16 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
   @override
   void initState() {
     super.initState();
+    _buscarComanda();
+  }
+
+  _buscarComanda() {
     setState(() {
       carregando = true;
     });
-    comandaService.fetchComanda(widget.numeroMesa).then((value) {
+    Provider.of<ComandaController>(context, listen: false)
+        .buscaComanda(widget.numeroMesa)
+        .then((value) {
       setState(() {
         comanda = value;
         carregando = false;
@@ -219,7 +231,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
     }).catchError((error) {
       final snackBar = SnackBar(
           content: Text(
-              'Erro ao buscar detalhes da Comanda ${widget.numeroMesa.toString()}! ${error.toString()}'));
+              'Erro ao buscar detalhes da Comanda ${widget.numeroMesa.toString()}!\n Verifique a configuração do Servidor Local!'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {
         carregando = false;
@@ -247,7 +259,7 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
         title: Center(
           child: Text(
               'Produtos | Mesa ${widget.numeroMesa.toString().padLeft(2, '0')}',
-              style: Theme.of(context).textTheme.headline1),
+              style: Theme.of(context).textTheme.displayLarge),
         ),
       ),
       body: ValueListenableBuilder(
@@ -276,13 +288,15 @@ class _DetalheComandaPageState extends State<DetalheComandaPage> {
                     style: TextStyle(fontSize: 35),
                   )
                 : Center(child: Text('Aguarde carregando!')),
-            Container(
-              alignment: Alignment.bottomCenter,
-              height: 60,
-              margin: EdgeInsets.only(left: 10, right: 10),
-              width: MediaQuery.of(context).size.width,
-              child: _botao(),
-            )
+            comanda.itens!.isNotEmpty
+                ? Container(
+                    alignment: Alignment.bottomCenter,
+                    height: 60,
+                    margin: EdgeInsets.only(left: 10, right: 10),
+                    width: MediaQuery.of(context).size.width,
+                    child: _botao(),
+                  )
+                : SizedBox(),
           ],
         ),
       ),

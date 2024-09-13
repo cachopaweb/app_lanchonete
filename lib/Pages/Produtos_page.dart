@@ -11,7 +11,7 @@ import 'package:lanchonete/Services/ProdutosService.dart';
 class ProdutosPage extends StatefulWidget {
   final int? idCategoria;
   final String? categoria;
-  final int? mesa;
+  final int mesa;
 
   ProdutosPage({
     Key? key,
@@ -42,7 +42,8 @@ class _ProdutosPageState extends State<ProdutosPage> {
         ),
       ),
       body: FutureBuilder<List<Produtos>>(
-        future: produtoService.fetchProdutos(widget.idCategoria.toString()),
+        future:
+            produtoService.fetchProdutos('?categoria=${widget.idCategoria}'),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
