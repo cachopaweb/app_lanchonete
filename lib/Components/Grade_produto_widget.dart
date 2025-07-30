@@ -11,7 +11,7 @@ import 'package:lanchonete/Models/grade_produto_model.dart';
 import 'package:lanchonete/Models/produtos_model.dart';
 import 'package:lanchonete/Services/ProdutosService.dart';
 
-enum Sabores { umSabor, doisSabores }
+enum Sabores { umSabor, doisSabores, tresSabores, quatroSabores }
 
 class WidgetGradeProduto extends StatefulWidget {
   final Produtos produto;
@@ -56,17 +56,62 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
   }
 
   String saboresToImage(Sabores sabores) {
-    String imagem = 'assets/images/1.png';
+    String imagem = 'assets/images/1 sabor/1.png';
     switch (sabores) {
       case Sabores.umSabor:
-        imagem = 'assets/images/1.png';
+        imagem = 'assets/images/1 sabor/1.png';
         break;
       case Sabores.doisSabores:
         {
-          if (widget.itensList.value.length == 2) {
-            imagem = 'assets/images/2.png';
-          } else {
-            imagem = 'assets/images/1_2.png';
+          switch (widget.itensList.value.length) {
+            case 1:
+              imagem = 'assets/images/2 sabores/1.png';
+              break;
+            case 2:
+              imagem = 'assets/images/2 sabores/2.png';
+              break;
+            default:
+              imagem = 'assets/images/2 sabores/1.png';
+              break;
+          }
+          break;
+        }
+      case Sabores.tresSabores:
+        {
+          switch (widget.itensList.value.length) {
+            case 1:
+              imagem = 'assets/images/3 sabores/1.png';
+              break;
+            case 2:
+              imagem = 'assets/images/3 sabores/2.png';
+              break;
+            case 3:
+              imagem = 'assets/images/3 sabores/3.png';
+              break;
+            default:
+              imagem = 'assets/images/3 sabores/1.png';
+              break;
+          }
+          break;
+        }
+      case Sabores.quatroSabores:
+        {
+          switch (widget.itensList.value.length) {
+            case 1:
+              imagem = 'assets/images/4 sabores/1.png';
+              break;
+            case 2:
+              imagem = 'assets/images/4 sabores/2.png';
+              break;
+            case 3:
+              imagem = 'assets/images/4 sabores/3.png';
+              break;
+            case 4:
+              imagem = 'assets/images/4 sabores/4.png';
+              break;
+            default:
+              imagem = 'assets/images/4 sabores/1.png';
+              break;
           }
           break;
         }
@@ -145,6 +190,11 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
                   return GestureDetector(
                     onTap: () {
                       tamanhoSelecionado.value = grade.tamanho;
+                      if (grade.tamanho == 'P' ||
+                          grade.tamanho == 'M' ||
+                          grade.tamanho == 'G') {
+                        qtdSaboresEscolhido.value = Sabores.umSabor;
+                      }
                     },
                     child: ValueListenableBuilder<String>(
                         valueListenable: tamanhoSelecionado,
@@ -265,70 +315,39 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
         builder: (context, _, __) {
           return Expanded(
             flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (widget.itensList.value.length > 1) {
-                      widget.itensList.value.removeLast();
-                    }
-                    qtdSaboresEscolhido.value = Sabores.umSabor;
-                  },
-                  child: SizedBox(
-                    width: size.width * 0.5 / 2,
-                    child: Card(
-                      color: qtdSaboresEscolhido.value == Sabores.umSabor
-                          ? Colors.green
-                          : Colors.white,
-                      elevation: 10,
-                      child: Center(
-                        child: Text(
-                          '1',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: qtdSaboresEscolhido.value == Sabores.umSabor
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    if (widget.itensList.value.length == 2) {
-                      return;
-                    }
-                    qtdSaboresEscolhido.value = Sabores.doisSabores;
-                  },
-                  child: SizedBox(
-                    width: size.width * 0.5 / 2,
-                    child: Card(
-                      color: qtdSaboresEscolhido.value == Sabores.doisSabores
-                          ? Colors.green
-                          : Colors.white,
-                      elevation: 10,
-                      child: Center(
-                        child: Text(
-                          '2',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color:
-                                qtdSaboresEscolhido.value == Sabores.doisSabores
-                                    ? Colors.white
-                                    : Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: ValueListenableBuilder<String>(
+                valueListenable: tamanhoSelecionado,
+                builder: (context, tamanho, _) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SaboresWidget(
+                          widget: widget,
+                          qtdSaboresEscolhido: qtdSaboresEscolhido,
+                          width: size.width * 0.5 / 4,
+                          tamanho: tamanho,
+                          qtdSabores: 1),
+                      SaboresWidget(
+                          widget: widget,
+                          qtdSaboresEscolhido: qtdSaboresEscolhido,
+                          width: size.width * 0.5 / 4,
+                          tamanho: tamanho,
+                          qtdSabores: 2),
+                      SaboresWidget(
+                          widget: widget,
+                          qtdSaboresEscolhido: qtdSaboresEscolhido,
+                          width: size.width * 0.5 / 4,
+                          tamanho: tamanho,
+                          qtdSabores: 3),
+                      SaboresWidget(
+                          widget: widget,
+                          qtdSaboresEscolhido: qtdSaboresEscolhido,
+                          width: size.width * 0.5 / 4,
+                          tamanho: tamanho,
+                          qtdSabores: 4),
+                    ],
+                  );
+                }),
           );
         });
   }
@@ -383,6 +402,14 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
     }
     if ((qtdSaboresEscolhido.value == Sabores.doisSabores) &&
         widget.itensList.value.length == 2) {
+      return;
+    }
+    if ((qtdSaboresEscolhido.value == Sabores.tresSabores) &&
+        widget.itensList.value.length == 3) {
+      return;
+    }
+    if ((qtdSaboresEscolhido.value == Sabores.quatroSabores) &&
+        widget.itensList.value.length == 4) {
       return;
     }
     showDialog(
@@ -475,5 +502,62 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
     final comandaController =
         Provider.of<ComandaController>(context, listen: false);
     return _buildItemGrade(widget.itensList, comandaController);
+  }
+}
+
+class SaboresWidget extends StatelessWidget {
+  const SaboresWidget({
+    Key? key,
+    required this.widget,
+    required this.qtdSaboresEscolhido,
+    required this.width,
+    required this.qtdSabores,
+    required this.tamanho,
+  }) : super(key: key);
+
+  final String tamanho;
+  final int qtdSabores;
+  final WidgetGradeProduto widget;
+  final ValueNotifier<Sabores> qtdSaboresEscolhido;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if ((tamanho == 'P' || tamanho == 'M' || tamanho == 'G') &&
+            qtdSabores > 2) {
+          return;
+        }
+        if (widget.itensList.value.length > qtdSabores) {
+          for (var i = 0; i < widget.itensList.value.length - qtdSabores; i++) {
+            widget.itensList.value.removeLast();
+          }
+        }
+        qtdSaboresEscolhido.value = Sabores.values[qtdSabores - 1];
+      },
+      child: SizedBox(
+        width: width,
+        child: Card(
+          color: qtdSaboresEscolhido.value == Sabores.values[qtdSabores - 1]
+              ? Colors.green
+              : Colors.white,
+          elevation: 10,
+          child: Center(
+            child: Text(
+              qtdSabores.toString(),
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color:
+                    qtdSaboresEscolhido.value == Sabores.values[qtdSabores - 1]
+                        ? Colors.white
+                        : Colors.black,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
