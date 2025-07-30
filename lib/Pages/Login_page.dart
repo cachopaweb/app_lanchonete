@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:flutter/services.dart';
 import 'package:lanchonete/Controller/usuario_controller.dart';
 import 'package:lanchonete/Pages/Config_page.dart';
 import 'package:lanchonete/Pages/Principal_page.dart';
@@ -19,35 +18,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final controllerSenha = TextEditingController();
   final auth = LocalAuthentication();
-  bool _isAuthenticating = false;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<void> _authenticateWithBiometrics() async {
-    try {
-      setState(() {
-        _isAuthenticating = true;
-      });
-      setState(() {
-        _isAuthenticating = false;
-      });
-    } on PlatformException catch (e) {
-      print(e);
-      setState(() {
-        _isAuthenticating = false;
-      });
-      return;
-    }
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {});
   }
 
   @override
@@ -119,52 +95,11 @@ class _LoginPageState extends State<LoginPage> {
                 _buildButtonAcessar(context, _formKey),
                 SizedBox(
                   height: 20,
-                ),
-                _buildIdentificacao()
+                )
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildIdentificacao() {
-    return Container(
-      height: 150,
-      width: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-        color: Colors.amber,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _isAuthenticating
-              ? Text(
-                  'Autenticando...',
-                  style: TextStyle(fontSize: 12),
-                )
-              : Text('Bater Ponto'),
-          const Divider(height: 10),
-          SizedBox(
-            height: 90,
-            width: 90,
-            child: IconButton(
-              onPressed: _authenticateWithBiometrics,
-              icon: Icon(
-                Icons.fingerprint,
-                size: 80,
-                shadows: [
-                  Shadow(
-                    offset: Offset(2, 5),
-                    color: Colors.black38,
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
       ),
     );
   }
@@ -178,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
       height: 40,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.amber),
+          backgroundColor: WidgetStateProperty.all(Colors.amber),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

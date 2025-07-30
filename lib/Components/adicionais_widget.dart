@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../Controller/Comanda.Controller.dart';
@@ -176,7 +174,7 @@ class _AdicionaisWidgetState extends State<AdicionaisWidget> {
                 width: MediaQuery.of(context).size.width,
                 child: TextButton(
                   style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
+                      backgroundColor: WidgetStatePropertyAll(
                     Colors.amber,
                   )),
                   onPressed: () {

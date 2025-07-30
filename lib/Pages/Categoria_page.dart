@@ -221,7 +221,7 @@ class _CategoriaPageState extends State<CategoriaPage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) async {
         var controller = Provider.of<ComandaController>(context, listen: false);
         var cartIsEmpty = controller.isEmpty;
         if (cartIsEmpty) {

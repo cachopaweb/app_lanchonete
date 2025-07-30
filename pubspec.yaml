@@ -35,12 +35,12 @@ dependencies:
   local_auth: ^2.1.2
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.1
   flutter_test:
     sdk: flutter
 
 flutter_icons:
-  ios: true
+  ios: false
   android: true
   image_path_ios: "assets/images/launcher.png"
   image_path_android: "assets/images/launcher.png"

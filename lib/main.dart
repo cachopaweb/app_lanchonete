@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Lanchonete',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: false,
         brightness: themeController.isDark ? Brightness.dark : Brightness.light,
         primaryColor: Constants.primaryColor,
         appBarTheme: AppBarTheme(
@@ -42,34 +43,35 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         textTheme: TextTheme(
-            displayLarge: TextStyle(
+          displayLarge: TextStyle(
+            fontSize: 20,
+            color: themeController.isDark ? Colors.white : Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+          displayMedium: TextStyle(
+            fontSize: 20,
+            color: themeController.isDark ? Colors.white : Colors.black,
+            fontStyle: FontStyle.italic,
+          ),
+          displaySmall: TextStyle(
+            fontSize: 20,
+            color: themeController.isDark ? Colors.white : Colors.black,
+            fontStyle: FontStyle.italic,
+          ),
+          bodyLarge: TextStyle(
               fontSize: 20,
               color: themeController.isDark ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-            displayMedium: TextStyle(
+              fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(
               fontSize: 20,
               color: themeController.isDark ? Colors.white : Colors.black,
-              fontStyle: FontStyle.italic,
-            ),
-            displaySmall: TextStyle(
-              fontSize: 20,
-              color: themeController.isDark ? Colors.white : Colors.black,
-              fontStyle: FontStyle.italic,
-            ),
-            bodyLarge: TextStyle(
-                fontSize: 20,
-                color: themeController.isDark ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold),
-            bodyMedium: TextStyle(
-                fontSize: 20,
-                color: themeController.isDark ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold),
-            bodySmall: TextStyle(
-              fontSize: 20,
-              color: themeController.isDark ? Colors.white : Colors.black,
-              fontStyle: FontStyle.italic,
-            )),
+              fontWeight: FontWeight.bold),
+          bodySmall: TextStyle(
+            fontSize: 20,
+            color: themeController.isDark ? Colors.white : Colors.black,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
       ),
       home: LoginPage(),
     );

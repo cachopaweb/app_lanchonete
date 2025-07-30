@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lanchonete/Controller/usuario_controller.dart';
 import 'package:lanchonete/Models/Itens_Grade_model.dart';
+import 'package:lanchonete/repositories/functions_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'package:lanchonete/Components/Imagem_Produto_Widget.dart';
@@ -29,12 +30,30 @@ class WidgetGradeProduto extends StatefulWidget {
 }
 
 class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
+  String idAgrupamento = '';
   final produtosService = ProdutosService();
 
   final tamanhoSelecionado = ValueNotifier<String>('G');
   final qtdSaboresEscolhido = ValueNotifier<Sabores>(Sabores.umSabor);
 
   var f = new NumberFormat("##0.00", "pt_BR");
+
+  Future<void> getIdAgrupamento() async {
+    try {
+      final repository = FunctionsRepository();
+      final response =
+          await repository.fetchIncrementaGenerator('GEN_ID_AGRUPAMENTO');
+      idAgrupamento = response.toString();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getIdAgrupamento();
+  }
 
   String saboresToImage(Sabores sabores) {
     String imagem = 'assets/images/1.png';
@@ -170,7 +189,7 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
         height: 40,
         child: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               Colors.amber,
             ),
           ),
@@ -183,10 +202,6 @@ class _WidgetGradeProdutoState extends State<WidgetGradeProduto> {
             ),
           ),
           onPressed: () async {
-            var listIdAgrupamento = widget.itensList.value
-                .map((e) => e.produto.toString())
-                .toList();
-            var idAgrupamento = listIdAgrupamento.join('-');
             for (var item in widget.itensList.value) {
               var grade = await ProdutosService()
                   .fetchGradeProduto(item.produto, tamanhoSelecionado.value);
