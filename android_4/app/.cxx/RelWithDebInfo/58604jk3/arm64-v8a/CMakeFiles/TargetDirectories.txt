@@ -1,2 +1,0 @@
-D:/PROJETOS/Lanchonete/app_lanchonete/android/app/.cxx/RelWithDebInfo/58604jk3/arm64-v8a/CMakeFiles/edit_cache.dir
-D:/PROJETOS/Lanchonete/app_lanchonete/android/app/.cxx/RelWithDebInfo/58604jk3/arm64-v8a/CMakeFiles/rebuild_cache.dir
